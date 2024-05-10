@@ -183,8 +183,15 @@ bool JPEGCodec::Decode(DataElement const &in, DataElement &out)
         if( i >= this->GetDimensions()[2] )
           {
           // JPEGInvalidSecondFrag.dcm
-          assert( nfrags == this->GetNumberOfDimensions() ); (void)nfrags; // sentinel
-          gdcmWarningMacro( "Invalid JPEG Fragment found at pos #" << i + 1 << ". Skipping it" );
+          if (nfrags == this->GetNumberOfDimensions() )
+            {
+              (void)nfrags; //sentinel
+              gdcmWarningMacro( "Invalid JPEG Fragment found at pos #" << i + 1 << ". Skipping it" );
+            }
+          else {
+            return false;
+
+          }
           }
         else
           return false;
