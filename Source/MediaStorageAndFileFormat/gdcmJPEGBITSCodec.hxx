@@ -355,6 +355,9 @@ bool JPEGBITSCodec::GetHeaderInfo(std::istream &is, TransferSyntax &ts)
     {
     // Now we can initialize the JPEG decompression object.
     jpeg_create_decompress(&cinfo);
+          if (jerr.pub.msg_code == JERR_NO_SOI) {
+              std::printf("not a jpeg in step get_header_info");
+            }
 
     // Step 2: specify data source (eg, a file)
     jpeg_stdio_src(&cinfo, is, true);
@@ -733,6 +736,9 @@ bool JPEGBITSCodec::DecodeByStreams(std::istream &is, std::ostream &os)
         this->BitSample = jerr.pub.msg_parm.i[0];
         //assert( this->BitSample == 8 || this->BitSample == 12 || this->BitSample == 16 );
         }
+      if (jerr.pub.msg_code == JERR_NO_SOI) {
+          std::printf("not a jpeg in step err handler");
+        }
       jpeg_destroy_decompress(&cinfo);
       // TODO: www.dcm4che.org/jira/secure/attachment/10185/ct-implicit-little.dcm
       // weird Icon Image from GE...
@@ -744,6 +750,9 @@ bool JPEGBITSCodec::DecodeByStreams(std::istream &is, std::ostream &os)
     {
     // Now we can initialize the JPEG decompression object.
     jpeg_create_decompress(&cinfo);
+          if (jerr.pub.msg_code == JERR_NO_SOI) {
+              std::printf("not a jpeg in step a");
+            }
 
     // Step 2: specify data source (eg, a file)
     jpeg_stdio_src(&cinfo, is, true);
@@ -754,6 +763,9 @@ bool JPEGBITSCodec::DecodeByStreams(std::istream &is, std::ostream &os)
     }
 
   /* Step 3: read file parameters with jpeg_read_header() */
+          if (jerr.pub.msg_code == JERR_NO_SOI) {
+              std::printf("not a jpeg in step b");
+            }
 
   if ( Internals->StateSuspension < 2 )
     {
@@ -927,6 +939,7 @@ bool JPEGBITSCodec::DecodeByStreams(std::istream &is, std::ostream &os)
     buffer = (JSAMPARRAY)Internals->SampBuffer;
     }
 
+
   /* Step 6: while (scan lines remain to be read) */
   /*           jpeg_read_scanlines(...); */
 
@@ -946,6 +959,9 @@ bool JPEGBITSCodec::DecodeByStreams(std::istream &is, std::ostream &os)
       }
     os.write((char*)buffer[0], row_stride);
   }
+          if (jerr.pub.msg_code == JERR_NO_SOI) {
+              std::printf("Not a jpeg in step 6");
+            }
 
   /* Step 7: Finish decompression */
 
